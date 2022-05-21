@@ -2,7 +2,7 @@ const User = require('../models/user')
 const Character = require('../models/character')
 const bcrypt = require("bcryptjs");
 const WAValidator = require('public-address-validator');
-const {chilliNftContract, chilliswapEthContract, chilliswapPolygonContract} = require("../service/web3");
+const {chilliNftContract, chilliswapEthContract, chilliswapPolygonContract, chilliswapRinkebyContract, chilliswapMumbaiContract} = require("../service/web3");
 
 exports.getUser = async (req, res,) => {
   try {
@@ -159,9 +159,11 @@ exports.getProfile = async (req, res,) => {
       return res.status(401).send({ error: 'invalid user' })
     }
     const balance = await chilliNftContract.methods.balanceOf(walletAddress).call();
-    const chilliswapTokenBalancePolygon = await chilliswapPolygonContract.methods.balanceOf(walletAddress).call();
-    const chilliswapTokenBalanceEth = await chilliswapEthContract.methods.balanceOf(walletAddress).call();
-    const tokenAmount = parseFloat(chilliswapTokenBalanceEth) + parseFloat(chilliswapTokenBalancePolygon);
+    const chilliswapTokenBalancePolygon = process.env.STATUS == "dev" ? await chilliswapMumbaiContract.methods.balanceOf(walletAddress).call() : await chilliswapPolygonContract.methods.balanceOf(walletAddress).call();
+    const chilliswapTokenBalanceEth = process.env.STATUS == "dev" ? await chilliswapRinkebyContract.methods.balanceOf(walletAddress).call() :  await chilliswapEthContract.methods.balanceOf(walletAddress).call();
+    const decimalPolygon = process.env.STATUS == "dev" ? await chilliswapMumbaiContract.methods.decimals().call() : await chilliswapPolygonContract.methods.decimals().call();
+    const decimalEth = process.env.STATUS == "dev" ? await chilliswapRinkebyContract.methods.decimals().call() : await chilliswapEthContract.methods.decimals().call();
+    const tokenAmount = parseFloat(chilliswapTokenBalancePolygon) / parseFloat('1e' + decimalPolygon) + parseFloat(chilliswapTokenBalanceEth) / parseFloat('1e' + decimalEth);
     const tokenIds = [];
     const tokenURIs = [];
     for (var i = 1; i <= balance; i++){
@@ -178,7 +180,7 @@ exports.getProfile = async (req, res,) => {
     return res.json({
       nftTokenIds:tokenIds,
       ChilliTokenAmount: tokenAmount,
-      coversionRate: 1,
+      coversionRate: process.env.CONVERSION_RATE,
       UserName: user.username,
       CollectedChillis: user.chillis,
       ConfiguredCharacters: character
