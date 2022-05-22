@@ -194,7 +194,7 @@ exports.getProfile = async (req, res,) => {
 
 exports.chilliToToken = async (req, res,) => {
   try {
-    console.log('wallet:', req.user.publicAddress);
+    console.log('wallet:', req.user);
     res.send({ status: "success" })
 
   } catch (error) {
