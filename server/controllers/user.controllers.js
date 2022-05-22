@@ -201,8 +201,15 @@ exports.chilliToToken = async (req, res,) => {
     console.log('wallet:', req.user);
     console.log("xxP", convertAmount, network);
     const user = await User.findOne({publicAddress: req.user.publicAddress});
+    
+    let contract;
+    if (network == "ETH") contract = chilliEthContract;
+    else if (network == "Polygon") contract = chilliPolygonContract;
+    else res.send.status(401).send({message: "not supported network"});
+
     if(user.chillis > convertAmount) {
-      res.send({ status: "success" })
+      const tokenAmount = convertAmount * process.env.CONVERSION_RATE;
+      res.send({data: {tokenAmount}})
     }else{
       res.send({status: "collected chillis not enough"})
     }
