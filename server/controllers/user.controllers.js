@@ -4,6 +4,9 @@ const bcrypt = require("bcryptjs");
 const WAValidator = require('public-address-validator');
 const {chilliNftContract, chilliswapEthContract, chilliswapPolygonContract, chilliswapRinkebyContract, chilliswapMumbaiContract} = require("../service/web3");
 
+const chilliEthContract = process.env.STATUS == "dev" ? chilliswapRinkebyContract : chilliswapEthContract;
+const chilliPolygonContract = process.env.STATUS == "dev" ? chilliswapMumbaiContract : chilliswapPolygonContract;
+
 exports.getUser = async (req, res,) => {
   try {
     const publicAddress = req.params.publicAddress.toLowerCase()
@@ -159,10 +162,10 @@ exports.getProfile = async (req, res,) => {
       return res.status(401).send({ error: 'invalid user' })
     }
     const balance = await chilliNftContract.methods.balanceOf(walletAddress).call();
-    const chilliswapTokenBalancePolygon = process.env.STATUS == "dev" ? await chilliswapMumbaiContract.methods.balanceOf(walletAddress).call() : await chilliswapPolygonContract.methods.balanceOf(walletAddress).call();
-    const chilliswapTokenBalanceEth = process.env.STATUS == "dev" ? await chilliswapRinkebyContract.methods.balanceOf(walletAddress).call() :  await chilliswapEthContract.methods.balanceOf(walletAddress).call();
-    const decimalPolygon = process.env.STATUS == "dev" ? await chilliswapMumbaiContract.methods.decimals().call() : await chilliswapPolygonContract.methods.decimals().call();
-    const decimalEth = process.env.STATUS == "dev" ? await chilliswapRinkebyContract.methods.decimals().call() : await chilliswapEthContract.methods.decimals().call();
+    const chilliswapTokenBalancePolygon = await chilliPolygonContract.methods.balanceOf(walletAddress).call();
+    const chilliswapTokenBalanceEth = await chilliEthContract.methods.balanceOf(walletAddress).call();
+    const decimalPolygon = await chilliPolygonContract.methods.decimals().call();
+    const decimalEth = await chilliEthContract.methods.decimals().call();
     const tokenAmount = parseFloat(chilliswapTokenBalancePolygon) / parseFloat('1e' + decimalPolygon) + parseFloat(chilliswapTokenBalanceEth) / parseFloat('1e' + decimalEth);
     const tokenIds = [];
     const tokenURIs = [];
@@ -194,8 +197,15 @@ exports.getProfile = async (req, res,) => {
 
 exports.chilliToToken = async (req, res,) => {
   try {
+    const {convertAmount, network} = req.body;
     console.log('wallet:', req.user);
-    res.send({ status: "success" })
+    console.log("xxP", convertAmount, network);
+    const user = await User.findOne({publicAddress: req.user.publicAddress});
+    if(user.chillis > convertAmount) {
+      res.send({ status: "success" })
+    }else{
+      res.send({status: "collected chillis not enough"})
+    }
 
   } catch (error) {
     res.status(401).send(error.message);
