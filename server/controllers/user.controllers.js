@@ -2,10 +2,22 @@ const User = require('../models/user')
 const Character = require('../models/character')
 const bcrypt = require("bcryptjs");
 const WAValidator = require('public-address-validator');
-const {chilliNftContract, chilliswapEthContract, chilliswapPolygonContract, chilliswapRinkebyContract, chilliswapMumbaiContract} = require("../service/web3");
+const {chilliNftContract, 
+  chilliswapEthContract, 
+  chilliswapPolygonContract, 
+  chilliswapRinkebyContract, 
+  chilliswapMumbaiContract,
+  ethWeb3,
+  polygonWeb3,
+  rinkebyWeb3,
+  mumbaiWeb3
+} = require("../service/web3");
 
 const chilliEthContract = process.env.STATUS == "dev" ? chilliswapRinkebyContract : chilliswapEthContract;
 const chilliPolygonContract = process.env.STATUS == "dev" ? chilliswapMumbaiContract : chilliswapPolygonContract;
+
+const web3ETH = process.env.STATUS == "dev" ? rinkebyWeb3 : ethWeb3;
+const web3Polygon = process.env.STATUS == "dev" ? mumbaiWeb3: polygonWeb3;
 
 exports.getUser = async (req, res,) => {
   try {
@@ -203,8 +215,15 @@ exports.chilliToToken = async (req, res,) => {
     const user = await User.findOne({publicAddress: req.user.publicAddress});
     
     let contract;
-    if (network == "ETH") contract = chilliEthContract;
-    else if (network == "Polygon") contract = chilliPolygonContract;
+    let web3;
+    if (network == "ETH") {
+      contract = chilliEthContract;
+      web3 = web3ETH;
+    }
+    else if (network == "Polygon") {
+      contract = chilliPolygonContract;
+      web3 = web3Polygon;
+    }
     else res.send.status(401).send({message: "not supported network"});
 
     if(user.chillis > convertAmount) {

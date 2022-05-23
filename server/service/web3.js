@@ -56,6 +56,10 @@ const chilliswapMumbaiContract = new mumbaiWeb3.eth.Contract(
 module.exports = {
     web3,
     WSweb3: WSweb3,
+    ethWeb3,
+    polygonWeb3,
+    rinkebyWeb3,
+    mumbaiWeb3,
     chilliNftContract:chilliNftContract,
     chilliswapEthContract,
     chilliswapPolygonContract,
