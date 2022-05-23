@@ -233,6 +233,27 @@ exports.chilliToToken = async (req, res,) => {
       res.send({status: "collected chillis not enough"})
     }
 
+
+
+  //   public async send(sender: string, receiver: string, value: number, key: string)
+  //   // @ts-ignore: PromiEvent extends Promise
+  //   : PromiEvent<TransactionReceipt> {
+  //   const query = this.contract.methods.transfer(receiver, value);
+  //   const encodedABI = query.encodeABI();
+  //   const signedTx = await this.web3.eth.accounts.signTransaction(
+  //     {
+  //       data: encodedABI,
+  //       from: sender,
+  //       gas: 2000000,
+  //       to: this.contract.options.address,
+  //     },
+  //     key,
+  //     false,
+  //   );
+  //   // @ts-ignore: property exists
+  //   return this.web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+  // }
+
   } catch (error) {
     res.status(401).send(error.message);
   }
