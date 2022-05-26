@@ -19,9 +19,28 @@ const subcharacterSchema = new mongoose.Schema({
   },
   accessories: {
     type: Array
+  },
+  goggles: {
+    type: String
+  },
+  headphones: {
+    type: String
+  },
+  backpack: {
+    type: String
+  },
+  watch: {
+    type: String
+  },
+  shoes: {
+    type: String
+  },
+  bodytype: {
+    type: String
   }
+
 },
-{ timestamps: true }
+  { timestamps: true }
 )
 const tableSchema = new mongoose.Schema({
   userId: {
@@ -33,8 +52,117 @@ const tableSchema = new mongoose.Schema({
     type: String,
     unique: true
   },
-  characterData: [subcharacterSchema]
+  characterData: {
+    type: [subcharacterSchema],
+    default: [
+      {
+        clothes: [
+        ],
+        accessories: [
+        ],
+        bodytype: "boy",
+        skintone: "",
+        hairstyle: "",
+        eyecolor: "",
+        updatedAt: "",
+        createdAt: "",
+        goggles: "",
+        headphones: "",
+        backpack: "",
+        watch: "",
+        shoes: "",
+        headwear: ""
+      },
+      {
+        clothes: [
+        ],
+        accessories: [
+        ],
+        bodytype: "boy",
+        skintone: "",
+        hairstyle: "",
+        eyecolor: "",
+        updatedAt: "",
+        createdAt: "",
+        goggles: "",
+        headphones: "",
+        backpack: "",
+        watch: "",
+        shoes: "",
+        headwear: ""
+      }, {
+        clothes: [
+        ],
+        accessories: [
+        ],
+        bodytype: "boy",
+        skintone: "",
+        hairstyle: "",
+        eyecolor: "",
+        updatedAt: "",
+        createdAt: "",
+        goggles: "",
+        headphones: "",
+        backpack: "",
+        watch: "",
+        shoes: "",
+        headwear: ""
+      }, {
+        clothes: [
+        ],
+        accessories: [
+        ],
+        bodytype: "girl",
+        skintone: "",
+        hairstyle: "",
+        eyecolor: "",
+        updatedAt: "",
+        createdAt: "",
+        goggles: "",
+        headphones: "",
+        backpack: "",
+        watch: "",
+        shoes: "",
+        headwear: ""
+      },
+      {
+        clothes: [
+        ],
+        accessories: [
+        ],
+        bodytype: "girl",
+        skintone: "",
+        hairstyle: "",
+        eyecolor: "",
+        updatedAt: "",
+        createdAt: "",
+        goggles: "",
+        headphones: "",
+        backpack: "",
+        watch: "",
+        shoes: "",
+        headwear: ""
+      }, {
+        clothes: [
+        ],
+        accessories: [
+        ],
+        bodytype: "girl",
+        skintone: "",
+        hairstyle: "",
+        eyecolor: "",
+        updatedAt: "",
+        createdAt: "",
+        goggles: "",
+        headphones: "",
+        backpack: "",
+        watch: "",
+        shoes: "",
+        headwear: ""
+      }
+    ]
+  }
 },
-{ timestamps: true }
+  { timestamps: true }
 )
 module.exports = mongoose.model('character', tableSchema)
