@@ -3,28 +3,36 @@ const Schema = mongoose.Schema;
 const subcharacterSchema = new mongoose.Schema({
 
   skintone: {
-    type: String
+    type: String,
+    default: ""
   },
   hairstyle: {
-    type: String
+    type: String,
+    default: ""
   },
   headwear: {
-    type: String
+    type: String,
+    default: ""
   },
   eyecolor: {
-    type: String
+    type: String,
+    default: ""
   },
   clothes: {
-    type: Array
+    type: Array,
+    default: []
   },
   accessories: {
-    type: Array
+    type: Array,
+    default: []
   },
   goggles: {
-    type: String
+    type: String,
+    default: ""
   },
   headphones: {
-    type: String
+    type: String,
+    default: ""
   },
   backpack: {
     type: String
@@ -33,7 +41,8 @@ const subcharacterSchema = new mongoose.Schema({
     type: String
   },
   shoes: {
-    type: String
+    type: String,
+    default: ""
   },
   bodytype: {
     type: String
